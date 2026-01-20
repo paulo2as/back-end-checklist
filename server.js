@@ -22,7 +22,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 console.log('✓ Conectado ao Supabase com sucesso');
 
 const app = express();
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 app.use(cors());
 
 const handleSupabaseError = (res, source, error) => {
@@ -111,6 +116,7 @@ app.post('/salvar/carro', async (req, res) => {
     observacao,
     status,
     assinatura,
+    fotos
   } = req.body;
 
   if (!placa || placa.trim() === '') {
@@ -170,6 +176,7 @@ app.post('/salvar/carro', async (req, res) => {
       createdby: createdby || '',
       status: status || '',
       assinatura: assinatura?.trim() || '',
+      fotos: fotos? fotos : []
     };
 
     const { data: inserted, error } = await supabase
@@ -283,7 +290,8 @@ app.post('/salvar/moto', async (req, res) => {
     extintor,
     crlv_atualizado,
     observacao,
-    createdby
+    createdby,
+    fotos
   } = req.body;
 
   if (!placa || placa.trim() === '') {
@@ -336,7 +344,8 @@ app.post('/salvar/moto', async (req, res) => {
       crlv_atualizado: crlv_atualizado || false,
       observacao: observacao || '',
       extintor: extintor || false,
-      createdby: createdby || ''
+      createdby: createdby || '',
+      fotos: fotos || []
     };
 
     const { data: inserted, error } = await supabase
@@ -394,7 +403,8 @@ app.post('/salvar/qda', async (req, res) => {
     pecas_soltas,
     crlv_atualizado,
     observacao,
-    createdby
+    createdby,
+    fotos,
   } = req.body;
 
   if (!placa || placa.trim() === '') {
@@ -449,6 +459,7 @@ app.post('/salvar/qda', async (req, res) => {
       pecas_soltas: pecas_soltas || false,
       crlv_atualizado: crlv_atualizado || false,
       observacao: observacao || '',
+      fotos: fotos || [],
       createdby: createdby || ''
     };
 
@@ -497,7 +508,8 @@ app.post('/salvar/diariabt', async (req, res) => {
     chave_cachimbo,
     crlv_atualizado,
     observacao,
-    createdby
+    createdby,
+    fotos,
   } = req.body;
 
 if (!modelo || modelo.trim() === '') {
@@ -542,7 +554,8 @@ if (!modelo || modelo.trim() === '') {
       chave_cachimbo: chave_cachimbo || false,
       crlv_atualizado: crlv_atualizado || false,
       observacao: observacao || '',
-      createdby: createdby || ''
+      createdby: createdby || '',
+      fotos: fotos || []
     };
 
     const { data: inserted, error } = await supabase
